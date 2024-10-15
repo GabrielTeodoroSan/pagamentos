@@ -1,6 +1,6 @@
 from fastapi import Fastapi
-from api.schemas import User, ProductsInfo, PurchaseInfo
 
+from api.schemas import ProductsInfo, PurchaseInfo, User
 
 app = Fastapi()
 
