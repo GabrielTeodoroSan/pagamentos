@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "pagamentos"
+version = "0.1.0"
+description = ""
+authors = ["GabrielTeodoroSan <gabrielteodorodomingues@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+celery = "^5.4.0"
+uvicorn = "^0.31.0"
+fastapi = "^0.115.0"
+
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+blue = "^0.9.1"
+taskipy = "^1.13.0"
+pytest-cov = "^5.0.0"
+
+[tool.taskipy.tasks]
+clear = "isort . && blue ."
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
