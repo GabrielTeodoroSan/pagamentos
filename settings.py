@@ -9,5 +9,6 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ACCESS_TOKEN: str
     ACCESS_TOKEN_URL: str
-    BASE_URL: str
+    BASE_ORDER_URL: str
+    API_BASE_URL: str
     BROKER_URL: str
