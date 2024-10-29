@@ -1,15 +1,13 @@
+import json
 import uuid
 
 import requests
-from celery import Celery
 from requests.auth import HTTPBasicAuth
 
 from settings import Settings
 
-app = Celery('tasks', broker=Settings().BROKER_URL)
 
-
-async def get_token():
+async def get_token() -> str:
     headers = {
         'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -29,7 +27,6 @@ async def get_token():
     return token.json()['access_token']
 
 
-@app.task
 async def start_pay(products_info, user):
     access_token = await get_token()
 
@@ -47,11 +44,11 @@ async def start_pay(products_info, user):
         'payment_source': {
             'paypal': {
                 'experience_context': {
-                    'payment_method_preference': 'IMMEDIATE_PAYMENT_REQUIRE',
+                    'payment_method_preference': 'IMMEDIATE_PAYMENT_REQUIRED',
                     'brand_name': 'EXAMPLE INC',
-                    'locale': 'en-US',
+                    'locale': 'pt-BR',
                     'landing_page': 'LOGIN',
-                    'shipping_preference': 'SET_PROVIDED_ADDRESS',
+                    'shipping_preference': 'NO_SHIPPING',
                     'user_action': 'PAY_NOW',
                     'return_url': f'{Settings().API_BASE_URL}return',
                     'cancel_url': f'{Settings().API_BASE_URL}cancel',
@@ -67,16 +64,12 @@ async def start_pay(products_info, user):
     }
 
     order_response = requests.post(
-        Settings().BASE_ORDER_URL, headers=headers, data=data
+        Settings().BASE_ORDER_URL, headers=header, data=json.dumps(data)
     )
 
-    if order_response.status_code == 201:
-        return {
-            'approval_url': next(
-                link['href']
-                for link in order_response.json()['links']
-                if link['rel'] == 'approve'
-            )
-        }
+    if order_response.status_code == 200:
+        return order_response
     else:
-        return {'message': 'Erro'}
+        return {
+            'message': f'Erro {order_response.status_code} // {order_response.text}'
+        }

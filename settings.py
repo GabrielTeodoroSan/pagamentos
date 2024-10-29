@@ -12,3 +12,4 @@ class Settings(BaseSettings):
     BASE_ORDER_URL: str
     API_BASE_URL: str
     BROKER_URL: str
+    BACKEND_URL: str
