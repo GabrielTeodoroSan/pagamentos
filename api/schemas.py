@@ -15,3 +15,7 @@ class PurchaseInfo(BaseModel):
 class User(BaseModel):
     id: int
     name: str
+
+
+class Link(BaseModel):
+    link: str

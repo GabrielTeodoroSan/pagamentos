@@ -3,8 +3,10 @@ from random import randint
 import factory
 import pytest
 from faker import Faker
+from fastapi.testclient import TestClient
 
 from api import schemas
+from api.main import app
 
 fake = Faker()
 
@@ -23,6 +25,11 @@ class ProductsInfo(factory.Factory):
 
     products = [fake.company() for i in range(3)]
     price_total = randint(0, 1000)
+
+
+@pytest.fixture
+def client():
+    yield TestClient(app)
 
 
 @pytest.fixture
